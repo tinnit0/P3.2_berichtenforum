@@ -46,9 +46,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
 
         #text{
             height: 25px;
-            border-radius: 5px;
+            border-radius: 100px;
             padding: 4px;
-            border: solid thin #aaa;
+            border: solid black;
             width: 100%;
         }
         #button{
@@ -59,7 +59,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
             border: none;
         }
         #box{
-            background-color: grey;
+            background-color: orange;
             margin: auto;
             width: 300px;
             padding: 20px;
@@ -69,7 +69,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
     <div id="box">
         
     <form method="post">
-        <div style="font-size: 20px; margin: 10px; color: white;">Login</div>
+        <div style="font-size: 20px; margin: 10px; color: black;">Login</div>
         <input id="text" type="text" name="user_name"><br><br>
         <input id="text" type="password" name="password"><br><br>
         <input id="button" type="submit" value="Login"><br><br>
