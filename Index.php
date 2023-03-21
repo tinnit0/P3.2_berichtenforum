@@ -11,5 +11,5 @@ if (!$conn) {
     die('Could not connect to MySQL: ' . mysqli_connect_error());
 }
 
-echo "hoi hoi";
+echo "hoi hoi hoi";
 ?>
