@@ -1,4 +1,5 @@
 <?php
+session_start();
 include("connection.php");
 if (isset($_POST['submit'])) {
     $question = mysqli_real_escape_string($con, $_POST['question']);
@@ -10,24 +11,8 @@ if (isset($_POST['submit'])) {
         echo "Error: " . $sql . "<br>" . $con->error;
     }
 }
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    include("connection.php");
-    include("functions.php");
-=======
-$host = 'localhost';
-$username = 'root';
-$password = '';
-$dbname = 'login_sample_db';
->>>>>>> Stashed changes
-
-    $user_data = check_login($con);
-=======
 $sql = "SELECT vraag_text FROM vragen";
 $result = $con->query($sql);
->>>>>>> Stashed changes
-
 ?>
 
 <!DOCTYPE html>
@@ -61,8 +46,8 @@ $result = $con->query($sql);
             ?>
         </center>
     </div>
-
 </body>
+</html>
 
 </html>
 
