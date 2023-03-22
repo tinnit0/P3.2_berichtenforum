@@ -1,8 +1,15 @@
 <?php
 session_start();
 
+<<<<<<< Updated upstream
     include("connection.php");
     include("functions.php");
+=======
+$host = 'localhost';
+$username = 'root';
+$password = '';
+$dbname = 'login_sample_db';
+>>>>>>> Stashed changes
 
     $user_data = check_login($con);
 
