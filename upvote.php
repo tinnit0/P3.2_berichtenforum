@@ -27,17 +27,19 @@ if (isset($_POST['upvote'])) {
     $conn->query($sql);
 }
 
-// Controleren of er op de downvote-knop is geklikt
-if (isset($_POST['downvote'])) {
+if (isset($_POST['upvote'])) {
     $post_id = $_POST['post_id'];
     $user_id = $_POST['user_id'];
 
-    // De downvote toevoegen aan de database
-    $sql = "UPDATE posts SET downvotes = downvotes + 1 WHERE id = '$post_id'";
+    echo "Post ID: " . $post_id;
+    echo "User ID: " . $user_id;
+
+    // De upvote toevoegen aan de database
+    $sql = "UPDATE posts SET upvotes = upvotes + 1 WHERE id = '$post_id'";
     $conn->query($sql);
 
-    // De gebruiker punten aftrekken voor de downvote
-    $sql = "UPDATE users SET points = points - 1 WHERE id = '$user_id'";
+    // De gebruiker punten geven voor de upvote
+    $sql = "UPDATE users SET points = points + 1 WHERE id = '$user_id'";
     $conn->query($sql);
 }
 
