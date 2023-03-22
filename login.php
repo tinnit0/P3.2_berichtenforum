@@ -59,7 +59,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
             border: none;
         }
         #box{
-            background-color: ;
             margin: auto;
             width: 300px;
             padding: 20px;
