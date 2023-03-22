@@ -21,7 +21,7 @@ function check_login($con)
 function random_num($length)
 {
     $text = "";
-    if($lenght < 5)
+    if($length < 5)
     {
         $length = 5;
     }

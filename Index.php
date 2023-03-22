@@ -1,15 +1,24 @@
 <?php
+session_start();
 
-$host = 'localhost';
-$username = 'root';
-$password = '';
-$dbname = 'Berichtenforum';
+    include("connection.php");
+    include("functions.php");
 
-$conn = mysqli_connect($host, $username, $password, $dbname);
+    $user_data = check_login($con);
 
-if (!$conn) {
-    die('Could not connect to MySQL: ' . mysqli_connect_error());
-}
-
-echo "hoi hoi hoi";
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My website</title>
+</head>
+<body>
+
+    <a href="logout.php">Logout</a>
+    <h1>This is the index page</h1>
+
+    <br>
+    Hello, <?php echo $user_data['user_name'];?>.
+</body>
+</html>
