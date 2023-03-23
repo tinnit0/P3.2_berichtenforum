@@ -16,7 +16,7 @@ if (isset($_POST['submit'])) {
 }
 $sql = "SELECT vraag_text FROM vragen";
 $result = $con->query($sql);
-?>Hoe 
+?>
 
 <!DOCTYPE html>
 <html>
