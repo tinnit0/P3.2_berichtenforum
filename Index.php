@@ -17,7 +17,7 @@ if (isset($_POST['submit'])) {
         echo "Error: " . $sql . "<br>" . $con->error;
     }
 }
-$sql = "SELECT vraag_text FROM vragen";
+$sql = "SELECT user_name FROM users";
 $result = $con->query($sql);
 ?>
 
@@ -31,14 +31,13 @@ $result = $con->query($sql);
 <body>
     <div>
         <form method="POST">
-            <label for="question">Schrijf een vraag:</label>
+            <label for="question">Schrijf een bericht:</label>
             <input type="text" name="question" required>
             <button type="submit" name="submit">Versturen</button>
         </form>
     </div>
 
     <div class="">
-        <center>
             <?php
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
@@ -48,7 +47,6 @@ $result = $con->query($sql);
                 echo "Geen vragen gevonden.";
             }
             ?>
-        </center>
     </div>
 </body>
 </html>
