@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "upvote systeem";
+$dbname = "upvote.systeem";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
