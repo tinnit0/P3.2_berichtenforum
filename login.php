@@ -20,14 +20,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                 if($user_data['password'] === $password)
                 {
                     $_SESSION['user_id']; $user_data['user_id'];
-                    header("Location: index1.php");
+                    header("Location: Index.php");
                     die;
                 }
             }
         }
-        echo "wrong username or password!";
-    }else
-    {
         echo "wrong username or password!";
     }
 }
