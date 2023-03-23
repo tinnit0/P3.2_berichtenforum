@@ -1,8 +1,6 @@
-
 <?php
 session_start();
 include("connection.php");
-include("css/index.css");
 if (isset($_POST['submit'])) {
 
     $question = mysqli_real_escape_string($con, $_POST['question']);
@@ -12,7 +10,6 @@ if (isset($_POST['submit'])) {
     if ($con->query($sql) === TRUE) {
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
-
     } else {
         echo "Error: " . $sql . "<br>" . $con->error;
     }
@@ -23,12 +20,13 @@ $result = $con->query($sql);
 
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" type="text/css" href="css/index.css">
 
-<head>
-    <title>Vragen</title>
-</head>
+<body class="body">
 
-<body>
+    <head>
+        <title>Vragen</title>
+    </head>
     <div>
         <form method="POST">
             <label for="question">Schrijf een vraag:</label>
@@ -37,20 +35,19 @@ $result = $con->query($sql);
         </form>
     </div>
 
-    <div class="">
-        <center>
-            <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo $row["vraag_text"] . "<br>";
-                }
-            } else {
-                echo "Geen vragen gevonden.";
+    <div>
+        <?php
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<p name='vraag' class='box'>" . $row["vraag_text"] . "</p>";
             }
-            ?>
-        </center>
+        } else {
+            echo "Geen vragen gevonden.";
+        }
+        ?>
     </div>
 </body>
+
 </html>
 
 <?php
