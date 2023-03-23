@@ -39,7 +39,8 @@ $result = $con->query($sql);
         <?php
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                echo "<p name='vraag' class='box'>" . $row["vraag_text"] . "</p>";
+                echo "<div name='vraag' class='box'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>" ;
+                echo $row["vraag_text"] . "<br>" ."<input type='text' required>" ."</div>";
             }
         } else {
             echo "Geen vragen gevonden.";

@@ -1,14 +1,21 @@
 .box {
     width: 50vw;
+    max-width: 50vw;
     margin-left: 25vw;
     font-size: 1.25vw;
     border: 0.2vw solid black;
     position: none;
     margin-bottom: 1vw;
-    background-color:#252525;
+    background-color: #252525;
+    word-wrap: break-word;
 }
 
 .body {
     background-color: black;
     color: white;
+}
+
+.name_card {
+    color: gray;
+    font-size: 0.75vw;
 }
