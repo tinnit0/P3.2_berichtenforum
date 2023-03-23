@@ -4,7 +4,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "upvote systeem";
+$dbname = "upvote.systeem";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -54,7 +54,7 @@ $conn->close();
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Titel van de pagina</title>
+    <title>Test</title>
 </head>
 <body>
     <?php include 'formulier.php'; ?>
