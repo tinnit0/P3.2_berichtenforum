@@ -19,3 +19,8 @@
     color: gray;
     font-size: 0.75vw;
 }
+
+.txt_area {
+    width: 5vw;
+    height: 0.75vw;
+}
