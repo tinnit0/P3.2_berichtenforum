@@ -9,15 +9,19 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Query's uitvoeren om het aantal upvotes en downvotes voor het bericht te verkrijgen
 $post_id = $_POST['post_id'];
-$sql = "SELECT upvotes, downvotes FROM posts WHERE id = '$post_id'";
-$result = $conn->query($sql);
+$stmt = $conn->prepare("SELECT upvotes, downvotes FROM posts WHERE id = ?");
+$stmt->bind_param("i", $post_id);
+$stmt->execute();
+$result = $stmt->get_result();
 $row = $result->fetch_assoc();
 $upvotes = 0;
 $downvotes = 0;
 
 // Query uitvoeren om upvotes en downvotes te krijgen
-$sql = "SELECT upvotes, downvotes FROM posts WHERE id = '$post_id'";
-$result = $conn->query($sql);
+$stmt = $conn->prepare("SELECT upvotes, downvotes FROM posts WHERE id = ?");
+$stmt->bind_param("i", $post_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result && $result->num_rows > 0) {
     $row = $result->fetch_assoc();
@@ -26,6 +30,9 @@ if ($result && $result->num_rows > 0) {
 } else {
     echo "er zijn geen rijen gevonden, doe hier iets anders";
 }
+
+$stmt->close();
+$conn->close();
 ?>
 
 <!-- HTML-code voor het formulier en het tonen van de upvotes en downvotes -->
