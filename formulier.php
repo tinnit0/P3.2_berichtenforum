@@ -24,7 +24,7 @@ if ($result && $result->num_rows > 0) {
     $upvotes = $row['upvotes'];
     $downvotes = $row['downvotes'];
 } else {
-    // er zijn geen rijen gevonden, doe hier iets anders
+    echo "er zijn geen rijen gevonden, doe hier iets anders";
 }
 ?>
 
