@@ -4,6 +4,7 @@ include("connection.php");
 if (isset($_POST['submit'])) {
 
     $question = mysqli_real_escape_string($con, $_POST['question']);
+    $answer = mysqli_real_escape_string($con, $_POST['answer']);
 
     $sql = "INSERT INTO vragen (vraag_text) VALUES ('$question')";
 
@@ -40,12 +41,14 @@ $result = $con->query($sql);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo "<div name='vraag' class='box'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>";
-                echo $row["vraag_text"] . "<br>" . "<textarea class='txt_area' required></textarea>" . "</div>";
+                echo $row["vraag_text"] . "<br>" . "<textarea name='answer' class='txt_area' required></textarea>" .  "<button type='answer'    name='answer'>Versturen</button>" . "</div>";
             }
         } else {
             echo "Geen vragen gevonden.";
         }
         ?>
+    </div>
+    <div>
     </div>
 </body>
 

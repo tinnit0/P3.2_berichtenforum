@@ -4,7 +4,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "upvote.systeem";
+$dbname = "login_sample_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
