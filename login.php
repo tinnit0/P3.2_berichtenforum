@@ -66,8 +66,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
         
     <form method="post">
         <div style="font-size: 20px; margin: 10px; color: black;">Login</div>
-        <input id="text" type="text" name="user_name"><br><br>
-        <input id="text" type="password" name="password"><br><br>
+        <input id="text" type="text" name="user_name" required><br><br>
+        <input id="text" type="password" name="password" required><br><br>
         <input id="button" type="submit" value="Login"><br><br>
         <a href="signup.php">Click to signup</a><br><br>
     </form>
