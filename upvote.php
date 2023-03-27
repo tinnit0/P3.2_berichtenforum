@@ -47,6 +47,10 @@ if (isset($_POST['upvote'])) {
 $conn->close();
 
 ?>
+<?php
+// code voor verbinding met de database en verwerking van het formulier
+?>
+
 <!DOCTYPE html>
 <html>
 <head>

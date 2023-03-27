@@ -30,7 +30,7 @@ $result = $con->query($sql);
     <div>
         <form method="POST">
             <label for="question">Schrijf een vraag:</label>
-            <input type="text" name="question" required>
+            <textarea class="txt_area" type="text" name="question" required></textarea>
             <button type="submit" name="submit">Versturen</button>
         </form>
     </div>
@@ -39,8 +39,8 @@ $result = $con->query($sql);
         <?php
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                echo "<div name='vraag' class='box'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>" ;
-                echo $row["vraag_text"] . "<br>" ."<input type='text' required>" ."</div>";
+                echo "<div name='vraag' class='box'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>";
+                echo $row["vraag_text"] . "<br>" . "<textarea class='txt_area' required></textarea>" . "</div>";
             }
         } else {
             echo "Geen vragen gevonden.";
