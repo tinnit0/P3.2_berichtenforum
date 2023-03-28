@@ -3,6 +3,8 @@ session_start();
 include("connection.php");
 $sql = "SELECT user_name FROM users";
 $result = $con->query($sql);
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,24 +15,42 @@ h1{
 }
 
 h2{
+    border-left: 6px solid blue;
+    color: #000!important;
+    background-color: #ddffff!important;
+    font-size: 16px;
+}
+div{
     border-style: solid;
     border-color: black;
-    font-size: 16px;
 }
 </style>
 </head>
 <body>
 <h1>Profiel</h1>
-<h2>Gegevens<br><?php if ($result->num_rows > 0) {
+<div class="profile">
+<h2>Gegevens</h2><?php if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {
-      echo " - Name: " . $row["user_name"]. "<br>";
+      echo "<p>Profielnaam<br></p>" . $row["user_name"]. "<br>";
     }
   } else {
     echo "0 results";
-  } ?><br><br><br><br></h2>
+  } ?><br><br><br><br>
+</div>
 <a href="Logout1.php">Uitloggen</a>
 
 <p>gegevens</p>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
