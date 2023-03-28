@@ -15,20 +15,24 @@ h1{
 }
 
 h2{
-    border-left: 6px solid blue;
+    border-left: 650px solid blue;
+    border-right: 650px solid blue;
     color: #000!important;
     background-color: #ddffff!important;
     font-size: 16px;
+    text-align: center;
 }
 div{
     border-style: solid;
     border-color: black;
+    text-align: center;
 }
 p{
-    border-left: 5px solid blue;
+    border-left: 650px solid blue;
+    border-right: 650px solid blue;
     color: #000!important;
     background-color: rgb(220, 250, 250);
-    
+    text-align: center;
 }
 </style>
 </head>
