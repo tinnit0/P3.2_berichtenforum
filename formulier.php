@@ -23,24 +23,58 @@ $stmt->bind_param("i", $post_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($result && $result->num_rows > 0) {
+if ($result === false) {
+    echo "Er is een fout opgetreden bij het uitvoeren van de query: " . $conn->error;
+} elseif ($result->num_rows == 0) {
+    echo "Er zijn geen rijen gevonden voor de opgegeven post.";
+} else {
     $row = $result->fetch_assoc();
     $upvotes = $row['upvotes'];
     $downvotes = $row['downvotes'];
-} else {
-    echo "er zijn geen rijen gevonden, doe hier iets anders";
 }
+
 
 $stmt->close();
 $conn->close();
 ?>
 
 <!-- HTML-code voor het formulier en het tonen van de upvotes en downvotes -->
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <style>
+      .upvote {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid black;
+}
+
+.downvote {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid black;
+}
+
+    </style>
+</head>
 <form method="POST" action="">
-    <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
-    <input type="hidden" name="user_id" value="1">
-    <button type="submit" name="upvote">Upvote</button>
-    <button type="submit" name="downvote">Downvote</button>
+<div class="upvote-container">
+  <button class="upvote" type="submit" name="upvote" value="<?php echo $post_id; ?>">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  <span class="upvote-count"><?php echo $upvotes; ?></span>
+</div>
+
+<div class="downvote-container">
+  <button class="downvote" type="submit" name="downvote" value="<?php echo $post_id; ?>">
+    <i class="fas fa-arrow-down"></i>
+  </button>
+  <span class="downvote-count"><?php echo $downvotes; ?></span>
+</div>
 </form>
 
 <p>Aantal upvotes: <?php echo $upvotes; ?></p>
