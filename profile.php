@@ -24,6 +24,12 @@ div{
     border-style: solid;
     border-color: black;
 }
+p{
+    border-left: 5px solid blue;
+    color: #000!important;
+    background-color: rgb(220, 250, 250);
+    
+}
 </style>
 </head>
 <body>
@@ -39,8 +45,6 @@ div{
   } ?><br><br><br><br>
 </div>
 <a href="Logout1.php">Uitloggen</a>
-
-<p>gegevens</p>
 </body>
 </html>
 
