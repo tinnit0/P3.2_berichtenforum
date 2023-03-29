@@ -18,29 +18,15 @@ if (isset($_POST['upvote'])) {
     $post_id = $_POST['post_id'];
     $user_id = $_POST['user_id'];
 
-    // De upvote toevoegen aan de database
-    $sql = "UPDATE posts SET upvotes = upvotes + 1 WHERE id = '$post_id'";
-    $conn->query($sql);
+    // De upvote toevoegen aan de database met prepared statement om SQL injectie te voorkomen
+    $stmt = $conn->prepare("UPDATE posts SET upvotes = upvotes + 1 WHERE id = ?");
+    $stmt->bind_param("i", $post_id);
+    $stmt->execute();
 
-    // De gebruiker punten geven voor de upvote
-    $sql = "UPDATE users SET points = points + 1 WHERE id = '$user_id'";
-    $conn->query($sql);
-}
-
-if (isset($_POST['upvote'])) {
-    $post_id = $_POST['post_id'];
-    $user_id = $_POST['user_id'];
-
-    echo "Post ID: " . $post_id;
-    echo "User ID: " . $user_id;
-
-    // De upvote toevoegen aan de database
-    $sql = "UPDATE posts SET upvotes = upvotes + 1 WHERE id = '$post_id'";
-    $conn->query($sql);
-
-    // De gebruiker punten geven voor de upvote
-    $sql = "UPDATE users SET points = points + 1 WHERE id = '$user_id'";
-    $conn->query($sql);
+    // De gebruiker punten geven voor de upvote met prepared statement om SQL injectie te voorkomen
+    $stmt = $conn->prepare("UPDATE users SET points = points + 1 WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
 }
 
 // Sluiten van de verbinding met de database
