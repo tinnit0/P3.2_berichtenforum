@@ -48,7 +48,8 @@ p{
     echo "0 results";
   } ?><br><br><br><br>
 </div>
-<a href="Logout1.php">Uitloggen</a>
+<a href="Logout1.php">Uitloggen</a><br>
+<a href="Index.php">Berichten</a>
 </body>
 </html>
 
