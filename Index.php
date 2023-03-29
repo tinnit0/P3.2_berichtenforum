@@ -4,7 +4,7 @@ include("connection.php");
 
 if (isset($_POST['submit_answer'])) {
     $answer = mysqli_real_escape_string($con, $_POST['answer']);
-    $sql = "INSERT INTO antwoorden (antwoord_text, antwoord_id) VALUES ('$answer', $answer_id)";
+    $sql = "INSERT INTO antwoorden (antwoord_text) VALUES ('$answer')";
     if ($con->query($sql) === false) {
         echo "Error: " . $sql . "<br>" . $con->error;
     } else {
@@ -15,7 +15,7 @@ if (isset($_POST['submit_answer'])) {
 
 if (isset($_POST['submit_question'])) {
     $question = mysqli_real_escape_string($con, $_POST['question']);
-    $sql = "INSERT INTO Vragen (vraag_text, vraag_id) VALUES ('$question', $qstion_id)";
+    $sql = "INSERT INTO Vragen (vraag_text) VALUES ('$question')";
     if ($con->query($sql) === false) {
         echo "Error: " . $sql . "<br>" . $con->error;
     } else {
