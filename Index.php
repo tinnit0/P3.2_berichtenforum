@@ -25,6 +25,20 @@ if (isset($_POST['submit_question'])) {
         exit();
     }
 }
+        if (isset($_POST['upvote']) || isset($_POST['downvote'])) {
+            $answer_id = mysqli_real_escape_string($con, $_POST['answer_id']);
+            $sql = "UPDATE Antwoorden SET ";
+            if (isset($_POST['upvote'])) {
+                $sql .= "upvotes = upvotes + 1 ";
+            } elseif (isset($_POST['downvote'])) {
+                $sql .= "downvotes = downvotes + 1 ";
+            }
+            $sql .= "WHERE antwoord_id = '$answer_id'";
+            if ($con->query($sql) === false) {
+                echo "Error: " . $sql . "<br>" . $con->error;
+            }
+        }
+
 
 $sql = "SELECT vraag_text, vraag_id FROM vragen";
 $result = $con->query($sql);
@@ -71,15 +85,23 @@ $result2 = $con->query($sql);
                 if (!empty($row["antwoord_text"])) {
                     $questions[$question_id]["antwoorden"][] = array(
                         "antwoord_text" => $row["antwoord_text"],
-                        "antwoord_id" => $row["antwoord_id"]
+                        "antwoord_id" => $row["antwoord_id"],
+                        "upvotes" => 0,
+                        "downvotes" => 0
                     );
                 }
             }
             foreach ($questions as $question_id => $question) {
                 echo "<form method='post'>" . "<div class='box'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>";
-                echo $question["vraag_text"] . "<br>" . "<textarea name='answer' class='txt_area' required></textarea>" .  "<input type='hidden' name='question_id' value='" . $question_id . "'>" . "<button type='submit' name='submit_answer'>Versturen</button>" ."</form>" . "</div>";
-                foreach ($question["antwoorden"] as $answer) {
-                    echo "<div class='box answer_box' id='answer_box_" . $answer['antwoord_id'] . "'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>" . $answer["antwoord_text"] . "</div>";
+                echo $question["vraag_text"] . "<br>" . "<textarea name='answer' class='txt_area' required></textarea>" .  "<input type='hidden' name='question_id' value='" . $question_id . "'>" . "<button type='submit' name='submit_answer'>Versturen</button>" . "</form>" . "</div>";
+                foreach ($question["antwoorden"] as $index => $answer) {
+                    echo "<div class='box answer_box' id='answer_box_" . $answer['antwoord_id'] . "'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>" . $answer["antwoord_text"] . "<br>";
+                    echo "<form method='post'>";
+                    echo "<input type='hidden' name='answer_id' value='" . $answer['antwoord_id'] . "'>";
+                    echo "<button type='submit' name='upvote" . $answer['antwoord_id'] . "'>Upvote (" . $answer['upvotes'] . ")</button>";
+                    echo "<button type='submit' name='downvote" . $answer['antwoord_id'] . "'>Downvote (" . $answer['downvotes'] . ")</button>";
+                    echo "</form>";
+                    echo "</div>";
                 }
             }
         } else {
