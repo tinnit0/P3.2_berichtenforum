@@ -33,16 +33,17 @@ if (isset($_POST['submit_question'])) {
             } elseif (isset($_POST['downvote'])) {
                 $sql .= "downvotes = downvotes + 1 ";
             }
-            $sql .= "WHERE antwoord_id = '$answer_id'";
+            $sql .= "WHERE vraag_id = '$answer_id'";
             if ($con->query($sql) === false) {
                 echo "Error: " . $sql . "<br>" . $con->error;
             }
         }
 
 
+
 $sql = "SELECT vraag_text, vraag_id FROM vragen";
 $result = $con->query($sql);
-$sql = "SELECT antwoord_text, antwoord_id, vraag_id FROM antwoorden";
+$sql = "SELECT antwoord_text, vraag_id, vraag_id, upvotes, downvotes FROM antwoorden";
 $result2 = $con->query($sql);
 
 ?>
@@ -67,7 +68,7 @@ $result2 = $con->query($sql);
 
     <div>
         <?php
-        $sql = "SELECT V.vraag_text, V.vraag_id, A.antwoord_text, A.antwoord_id 
+        $sql = "SELECT V.vraag_text, V.vraag_id, A.antwoord_text, A.vraag_id 
         FROM Vragen V 
         LEFT JOIN Antwoorden A ON V.vraag_id = A.vraag_id";
         $result = $con->query($sql);
@@ -85,7 +86,7 @@ $result2 = $con->query($sql);
                 if (!empty($row["antwoord_text"])) {
                     $questions[$question_id]["antwoorden"][] = array(
                         "antwoord_text" => $row["antwoord_text"],
-                        "antwoord_id" => $row["antwoord_id"],
+                        "vraag_id" => $row["vraag_id"],
                         "upvotes" => 0,
                         "downvotes" => 0
                     );
@@ -95,11 +96,11 @@ $result2 = $con->query($sql);
                 echo "<form method='post'>" . "<div class='box'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>";
                 echo $question["vraag_text"] . "<br>" . "<textarea name='answer' class='txt_area' required></textarea>" .  "<input type='hidden' name='question_id' value='" . $question_id . "'>" . "<button type='submit' name='submit_answer'>Versturen</button>" . "</form>" . "</div>";
                 foreach ($question["antwoorden"] as $index => $answer) {
-                    echo "<div class='box answer_box' id='answer_box_" . $answer['antwoord_id'] . "'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>" . $answer["antwoord_text"] . "<br>";
+                    echo "<div class='box answer_box' id='answer_box_" . $answer['vraag_id'] . "'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>" . $answer["antwoord_text"] . "<br>";
                     echo "<form method='post'>";
-                    echo "<input type='hidden' name='answer_id' value='" . $answer['antwoord_id'] . "'>";
-                    echo "<button type='submit' name='upvote" . $answer['antwoord_id'] . "'>Upvote (" . $answer['upvotes'] . ")</button>";
-                    echo "<button type='submit' name='downvote" . $answer['antwoord_id'] . "'>Downvote (" . $answer['downvotes'] . ")</button>";
+                    echo "<input type='hidden' name='answer_id' value='" . $answer['vraag_id'] . "'>";
+                    echo "<button type='submit' name='upvote' value='" . $answer['vraag_id'] . "'>Upvote (" . $answer['upvotes'] . ")</button>";
+                    echo "<button type='submit' name='downvote' value='" . $answer['vraag_id'] . "'>Downvote (" . $answer['downvotes'] . ")</button>";
                     echo "</form>";
                     echo "</div>";
                 }
