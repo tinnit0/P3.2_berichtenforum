@@ -77,12 +77,7 @@ $result2 = $con->query($sql);
             }
             foreach ($questions as $question_id => $question) {
                 echo "<form method='post'>" . "<div class='box'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>";
-                echo $question["vraag_text"] . "<br>" . "<textarea name='answer' class='txt_area' required></textarea>" .  "<input type='hidden' name='question_id' value='" . $question_id . "'>" . "<button type='submit' name='submit_answer'>Versturen</button>" .
-                "<form method='POST'> <div class='upvote-container'><button class='upvote' type='submit' name='upvote' value='<?php echo $post_id; ?>'>
-                <i class='fas fa-arrow-up'></i></button><span class='upvote-count'><?php echo $upvotes; ?></span>
-                </div><div class='downvote-container'><button class='downvote' type='submit' name='downvote' value='<?php echo $post_id; ?>'>
-                <i class='fas fa-arrow-down'></i></button><span class='downvote-count'><?php echo $downvotes; ?></span></div></form>" . 
-                "</form>" . "</div>";
+                echo $question["vraag_text"] . "<br>" . "<textarea name='answer' class='txt_area' required></textarea>" .  "<input type='hidden' name='question_id' value='" . $question_id . "'>" . "<button type='submit' name='submit_answer'>Versturen</button>" ."</form>" . "</div>";
                 foreach ($question["antwoorden"] as $answer) {
                     echo "<div class='box answer_box' id='answer_box_" . $answer['antwoord_id'] . "'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>" . $answer["antwoord_text"] . "</div>";
                 }
@@ -94,7 +89,6 @@ $result2 = $con->query($sql);
         $con->close();
         ?>
     </div>
-    <?php include 'formulier.php'; ?>
 </body>
 
 </html>
