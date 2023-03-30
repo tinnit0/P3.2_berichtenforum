@@ -2,31 +2,31 @@
 session_start();
 include("connection.php");
 
-if (isset($_POST['submit_answer'])) {
-    $answer = mysqli_real_escape_string($con, $_POST['answer']);
-    $sql = "INSERT INTO antwoorden (antwoord_text) VALUES ('$answer')";
-    if ($con->query($sql) === false) {
-        echo "Error: " . $sql . "<br>" . $con->error;
-    } else {
-        header("Location: index.php");
-        exit();
-    }
-}
-
-if (isset($_POST['submit_question'])) {
-    $question = mysqli_real_escape_string($con, $_POST['question']);
-    $sql = "INSERT INTO Vragen (vraag_text) VALUES ('$question')";
-    if ($con->query($sql) === false) {
-        echo "Error: " . $sql . "<br>" . $con->error;
-    } else {
-        header("Location: index.php");
-        exit();
-    }
-}
-
-        $sql = "SELECT vraag_text FROM vragen";
+        if (isset($_POST['submit_answer'])) {
+            $answer = mysqli_real_escape_string($con, $_POST['answer']);
+            $question_id = mysqli_real_escape_string($con, $_POST['question_id']);
+            $sql = "INSERT INTO Antwoorden (antwoord_text, vraag_id) VALUES ('$answer', '$question_id')";
+            if ($con->query($sql) === false) {
+                echo "Error: " . $sql . "<br>" . $con->error;
+            } else {
+                header("Location: index.php");
+                exit();
+            }
+        }
+        if (isset($_POST['submit_question'])) {
+            $question = mysqli_real_escape_string($con, $_POST['question']);
+            $sql = "INSERT INTO Vragen (vraag_text, vraag_id) VALUES ('$question, $question_id')";
+            if ($con->query($sql) === false) {
+                echo "Error: " . $sql . "<br>" . $con->error;
+            } else {
+                $question_id = mysqli_insert_id($con);
+                header("Location: index.php");
+                exit();
+            }
+        }
+        $sql = "SELECT vraag_text, vraag_id FROM vragen";
         $result = $con->query($sql);
-        $sql = "SELECT antwoord_text FROM antwoorden";
+        $sql = "SELECT antwoord_text, antwoord_id FROM antwoorden";
         $result2 = $con->query($sql);
 ?>
 
@@ -59,6 +59,7 @@ if (isset($_POST['submit_question'])) {
         if ($result->num_rows > 0) {
             while ($row = $result2->fetch_assoc()) {
                 echo $row["antwoord_text"];
+                echo $question_id;
             }
         } else {
             echo "Geen antwoorden gevonden.";
