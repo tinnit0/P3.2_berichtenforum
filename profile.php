@@ -1,8 +1,13 @@
 <?php
 session_start();
 include("connection.php");
-$sql = "SELECT user_name FROM users";
-$result = $con->query($sql);
+
+if(isset($_SESSION['user_id'])){
+     // ingelogd
+}else{
+    //niet
+    die("U bent niet ingelogd, ga terug naar de login pagina");
+}
 
 
 ?>
@@ -47,22 +52,17 @@ h3{
 <body>
 <h1>Profiel</h1>
 <div class="profile">
-<h2>Gegevens</h2><?php if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-      echo "<p>Profielnaam<br></p>" . $row["user_name"]. "<br>";
-    }
-  } else {
-    echo "0 results";
-  } ?>
+<h2>Gegevens</h2><?php if ($result->num_rows > 0) {   
+echo "<p>Profielnaam<br></p>";
+           
+}
+?>
 <p>Dit zijn je badges:</p><br><br><br><br>
 </div>
 <a href="Logout1.php">Uitloggen</a><br>
 <a href="Index.php">Berichten</a>
 </body>
 </html>
-
-
 
 
 
