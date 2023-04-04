@@ -2,15 +2,12 @@
 session_start();
 include("connection.php");
 
-if(isset($_SESSION['user_id'])){
-     // ingelogd
-}else{
-    //niet
-    die("U bent niet ingelogd, ga terug naar de login pagina");
-}
+if ($_SESSION["loggin"] != true) {
+    Header("Location: login.php");}
 $users = $con->query("SELECT * FROM users WHERE id = '" . $_SESSION['id'] . "'");
 
-$userdata = $users->fetch_assoc()
+$userdata = $users->fetch_assoc();
+
 ?>
 <!DOCTYPE html>
 <html>
