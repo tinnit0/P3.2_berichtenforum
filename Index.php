@@ -57,6 +57,19 @@ $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html>
 
+<style>
+    .boxreply {
+        width: 50vw;
+        max-width: 50vw;
+        font-size: 1.25vw;
+        border: 0.2vw #383838;
+        position: none;
+        margin-bottom: 1vw;
+        background-color: #383838;
+        word-wrap: break-word;
+    }
+</style>
+
 <head>
     <title>Answers</title>
     <link rel="stylesheet" type="text/css" href="css/index.css">
@@ -80,29 +93,30 @@ $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo '<input type="hidden" name="id" required value="' . $answer['id'] . '">';
             echo '<button type="submit" name="action" value="upvote">Upvote</button>';
             echo '<button type="submit" name="action" value="downvote">Downvote</button>';
+            echo '<p style="display: inline-block;">' . $answer['score'] . '</p>';
             echo '</form>';
-
             echo '<form method="post" action="">';
-            echo '<label for="reply">Reply:</label><br>';
-            echo '<textarea id="reply" name="reply" rows="2" cols="50" required></textarea><br>';
+            echo '<div style="display: inline-block;">';
+            echo '<textarea id="reply" name="reply" rows="2" cols="50" required></textarea>';
             echo '<input type="hidden" name="answer_id" value="' . $answer['id'] . '">';
             echo '<button type="submit">Submit</button>';
+            echo '</div>';
             echo '</form>';
 
             $replyStmt = $db->prepare('SELECT * FROM replies WHERE answer_id = ?');
             $replyStmt->execute([$answer['id']]);
             $replies = $replyStmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($replies as $reply) {
-                echo '<div class="reply">';
+                echo '<div class="boxreply" style="display: inline-block;">';
                 echo '<p>' . htmlspecialchars($reply['reply']) . '</p>';
                 echo '</div>';
             }
-
-            echo '<p class="score">' . $answer['score'] . '</p>';
             echo '</div>';
         }
         ?>
     </div>
+
+
 </body>
 
 </html>
