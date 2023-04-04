@@ -68,6 +68,7 @@ $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <textarea id="answer" name="answer" rows="4" cols="50" min="3" required></textarea><br>
         <button type="submit">Submit</button>
     </form>
+    <a href="profile.php">Profiel</a>
     <div id="answers">
         <?php
         foreach ($answers as $answer) {
