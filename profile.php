@@ -8,7 +8,7 @@ if(isset($_SESSION['user_id'])){
     //niet
     die("U bent niet ingelogd, ga terug naar de login pagina");
 }
-
+$user_id = $_GET['user_name'];
 
 ?>
 <!DOCTYPE html>
@@ -52,10 +52,9 @@ h3{
 <body>
 <h1>Profiel</h1>
 <div class="profile">
-<h2>Gegevens</h2><?php if ($result->num_rows > 0) {   
+<h2>Gegevens</h2><?php   
 echo "<p>Profielnaam<br></p>";
-           
-}
+$users = $con->query("SELECT * FROM users WHERE id = '" . $_SESSION['id'] . "'");
 ?>
 <p>Dit zijn je badges:</p><br><br><br><br>
 </div>
