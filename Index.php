@@ -25,27 +25,25 @@ if (isset($_POST['submit_question'])) {
         exit();
     }
 }
-        if (isset($_POST['upvote']) || isset($_POST['downvote'])) {
-            $answer_id = mysqli_real_escape_string($con, $_POST['answer_id']);
-            $sql = "UPDATE Antwoorden SET ";
-            if (isset($_POST['upvote'])) {
-                $sql .= "upvotes = upvotes + 1 ";
-            } elseif (isset($_POST['downvote'])) {
-                $sql .= "downvotes = downvotes + 1 ";
-            }
-            $sql .= "WHERE vraag_id = '$answer_id'";
-            if ($con->query($sql) === false) {
-                echo "Error: " . $sql . "<br>" . $con->error;
-            }
-        }
 
-
+if (isset($_POST['upvote']) || isset($_POST['downvote'])) {
+    $answer_id = mysqli_real_escape_string($con, $_POST['answer_id']);
+    $sql = "UPDATE Antwoorden SET ";
+    if (isset($_POST['upvote'])) {
+        $sql .= "upvotes = upvotes + 1 ";
+    } elseif (isset($_POST['downvote'])) {
+        $sql .= "downvotes = downvotes + 1 ";
+    }
+    $sql .= "WHERE antwoord_id = '$answer_id'";
+    if ($con->query($sql) === false) {
+        echo "Error: " . $sql . "<br>" . $con->error;
+    }
+}
 
 $sql = "SELECT vraag_text, vraag_id FROM vragen";
 $result = $con->query($sql);
-$sql = "SELECT antwoord_text, vraag_id, vraag_id, upvotes, downvotes FROM antwoorden";
+$sql = "SELECT antwoord_text, vraag_id, antwoord_id, upvotes, downvotes FROM antwoorden";
 $result2 = $con->query($sql);
-
 ?>
 
 
@@ -68,9 +66,7 @@ $result2 = $con->query($sql);
 
     <div>
         <?php
-        $sql = "SELECT V.vraag_text, V.vraag_id, A.antwoord_text, A.vraag_id 
-        FROM Vragen V 
-        LEFT JOIN Antwoorden A ON V.vraag_id = A.vraag_id";
+        $sql = "SELECT V.vraag_text, V.vraag_id, A.antwoord_text, A.vraag_id, A.upvotes, A.downvotes FROM Vragen V LEFT JOIN Antwoorden A ON V.vraag_id = A.vraag_id";
         $result = $con->query($sql);
 
         if ($result->num_rows > 0) {
@@ -87,8 +83,8 @@ $result2 = $con->query($sql);
                     $questions[$question_id]["antwoorden"][] = array(
                         "antwoord_text" => $row["antwoord_text"],
                         "vraag_id" => $row["vraag_id"],
-                        "upvotes" => 0,
-                        "downvotes" => 0
+                        "upvotes" => $row["upvotes"],
+                        "downvotes" => $row["downvotes"]
                     );
                 }
             }
@@ -98,7 +94,7 @@ $result2 = $con->query($sql);
                 foreach ($question["antwoorden"] as $index => $answer) {
                     echo "<div class='box answer_box' id='answer_box_" . $answer['vraag_id'] . "'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>" . $answer["antwoord_text"] . "<br>";
                     echo "<form method='post'>";
-                    echo "<input type='hidden' name='answer_id' value='" . $answer['vraag_id'] . "'>";
+                    echo "<input type='hidden' name='vraag_id' value='" . $answer['vraag_id'] . "'>";
                     echo "<button type='submit' name='upvote' value='" . $answer['vraag_id'] . "'>Upvote (" . $answer['upvotes'] . ")</button>";
                     echo "<button type='submit' name='downvote' value='" . $answer['vraag_id'] . "'>Downvote (" . $answer['downvotes'] . ")</button>";
                     echo "</form>";
@@ -106,10 +102,8 @@ $result2 = $con->query($sql);
                 }
             }
         } else {
-            echo "Geen vragen gevonden.";
+            echo "<p>Er zijn nog geen vragen gesteld.</p>";
         }
-
-        $con->close();
         ?>
     </div>
 </body>
