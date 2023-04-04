@@ -1,10 +1,9 @@
 <?php
 session_start();
 include("connection.php");
-
 if ($_SESSION["loggin"] != true) {
     Header("Location: login.php");}
-$users = $con->query("SELECT * FROM users WHERE id = '" . $_SESSION['id'] . "'");
+$users = $con->query("SELECT * FROM users WHERE id = '" . $_SESSION['user_id'] . "'");
 
 $userdata = $users->fetch_assoc();
 
@@ -52,7 +51,7 @@ h3{
 <div class="profile">
 <h2>Gegevens</h2><?php   
 echo "<p>Profielnaam<br></p>";
-echo $userdata['username'];
+
 ?>
 <p>Dit zijn je badges:</p><br><br><br><br>
 </div>

@@ -10,7 +10,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
     if(!empty($user_name) && !empty($password) && !is_numeric($user_name))
     {
         //read from database
-        $query = "select * from users where user_name = '$user_name' limit 1";
+        $query = "SELECT * FROM users WHERE user_name = '$user_name' limit 1";
         $result = mysqli_query($con, $query);
         if($result)
         {
