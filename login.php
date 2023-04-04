@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                 $user_data = mysqli_fetch_assoc($result);
                 if($user_data['password'] === $password)
                 {
-                    $_SESSION['user_id']; $user_data['user_id'];
+                    $_SESSION['user_id'] = $user_data['user_id'];
                     header("Location: Index.php");
                     die;
                 }
