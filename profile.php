@@ -8,9 +8,9 @@ if(isset($_SESSION['user_id'])){
     //niet
     die("U bent niet ingelogd, ga terug naar de login pagina");
 }
+$users = $con->query("SELECT * FROM users WHERE id = '" . $_SESSION['id'] . "'");
 
-$_SESSION = $con->query("SELECT id FROM users");
-sql = $con->query("SELECT * FROM users WHERE id = '" . $_SESSION['id'] . "'");
+$userdata = $users->fetch_assoc()
 ?>
 <!DOCTYPE html>
 <html>
@@ -55,7 +55,7 @@ h3{
 <div class="profile">
 <h2>Gegevens</h2><?php   
 echo "<p>Profielnaam<br></p>";
-
+echo $userdata['username'];
 ?>
 <p>Dit zijn je badges:</p><br><br><br><br>
 </div>
