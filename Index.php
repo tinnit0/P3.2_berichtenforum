@@ -2,107 +2,101 @@
 session_start();
 include("connection.php");
 
-if (isset($_POST['submit_answer'])) {
-    $answer = mysqli_real_escape_string($con, $_POST['answer']);
-    $question_id = mysqli_real_escape_string($con, $_POST['question_id']);
-    $sql = "INSERT INTO Antwoorden (antwoord_text, vraag_id) VALUES ('$answer', '$question_id')";
-    if ($con->query($sql) === false) {
-        echo "Error: " . $sql . "<br>" . $con->error;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['action'])) {
+    $id = $_POST['id'];
+    $action = $_POST['action'];
+
+    if ($action === 'upvote') {
+        $stmt = $db->prepare('UPDATE answers SET score = score + 1 WHERE id = ?');
+    } elseif ($action === 'downvote') {
+        $stmt = $db->prepare('UPDATE answers SET score = score - 1 WHERE id = ?');
+    }
+
+    $stmt->execute([$id]);
+
+    header('Location: index.php');
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply']) && isset($_POST['answer_id'])) {
+    $reply = $_POST['reply'];
+    $answer_id = $_POST['answer_id'];
+
+    $stmt = $db->prepare('SELECT COUNT(*) FROM answers WHERE id = ?');
+    $stmt->execute([$answer_id]);
+    $result = $stmt->fetch(PDO::FETCH_NUM);
+    if ($result[0] > 0) {
+
+        $stmt = $db->prepare('INSERT INTO replies (reply, answer_id) VALUES (?, ?)');
+        $stmt->execute([$reply, $answer_id]);
     } else {
-        header("Location: index.php");
-        exit();
     }
+
+    header('Location: index.php');
+    exit;
 }
 
-if (isset($_POST['submit_question'])) {
-    $question = mysqli_real_escape_string($con, $_POST['question']);
-    $sql = "INSERT INTO Vragen (vraag_text) VALUES ('$question')";
-    if ($con->query($sql) === false) {
-        echo "Error: " . $sql . "<br>" . $con->error;
-    } else {
-        $question_id = mysqli_insert_id($con);
-        header("Location: index.php");
-        exit();
-    }
+
+
+$stmt = $db->query('SELECT * FROM answers');
+$answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['answer'])) {
+    $answer = $_POST['answer'];
+    $stmt = $db->prepare('INSERT INTO answers (answer) VALUES (?)');
+    $stmt->execute([$answer]);
+
+    header('Location: index.php');
+    exit;
 }
 
-if (isset($_POST['upvote']) || isset($_POST['downvote'])) {
-    $answer_id = mysqli_real_escape_string($con, $_POST['answer_id']);
-    $sql = "UPDATE Antwoorden SET ";
-    if (isset($_POST['upvote'])) {
-        $sql .= "upvotes = upvotes + 1 ";
-    } elseif (isset($_POST['downvote'])) {
-        $sql .= "downvotes = downvotes + 1 ";
-    }
-    $sql .= "WHERE antwoord_id = '$answer_id'";
-    if ($con->query($sql) === false) {
-        echo "Error: " . $sql . "<br>" . $con->error;
-    }
-}
-
-$sql = "SELECT vraag_text, vraag_id FROM vragen";
-$result = $con->query($sql);
-$sql = "SELECT antwoord_text, vraag_id, antwoord_id, upvotes, downvotes FROM antwoorden";
-$result2 = $con->query($sql);
+$stmt = $db->query('SELECT * FROM answers');
+$answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>Vragen</title>
+    <title>Answers</title>
     <link rel="stylesheet" type="text/css" href="css/index.css">
 </head>
 
 <body class="body">
-    <div>
-        <form method="POST">
-            <label for="question">Schrijf een vraag:</label>
-            <textarea class="txt_area" type="text" name="question" required></textarea>
-            <button type="submit" name="submit_question">Versturen</button>
-        </form>
-    </div>
-
-    <div>
+    <form method="post" action="">
+        <label for="answer">Vraag:</label><br>
+        <textarea id="answer" name="answer" rows="4" cols="50" min="3" required></textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="answers">
         <?php
-        $sql = "SELECT V.vraag_text, V.vraag_id, A.antwoord_text, A.vraag_id, A.upvotes, A.downvotes FROM Vragen V LEFT JOIN Antwoorden A ON V.vraag_id = A.vraag_id";
-        $result = $con->query($sql);
+        foreach ($answers as $answer) {
+            echo '<div class="box">';
+            echo '<p>' . htmlspecialchars($answer['answer']) . '</p>';
+            echo '<form method="post" action="">';
+            echo '<input type="hidden" name="id" required value="' . $answer['id'] . '">';
+            echo '<button type="submit" name="action" value="upvote">Upvote</button>';
+            echo '<button type="submit" name="action" value="downvote">Downvote</button>';
+            echo '</form>';
 
-        if ($result->num_rows > 0) {
-            $questions = array();
-            while ($row = $result->fetch_assoc()) {
-                $question_id = $row["vraag_id"];
-                if (!isset($questions[$question_id])) {
-                    $questions[$question_id] = array(
-                        "vraag_text" => $row["vraag_text"],
-                        "antwoorden" => array()
-                    );
-                }
-                if (!empty($row["antwoord_text"])) {
-                    $questions[$question_id]["antwoorden"][] = array(
-                        "antwoord_text" => $row["antwoord_text"],
-                        "vraag_id" => $row["vraag_id"],
-                        "upvotes" => $row["upvotes"],
-                        "downvotes" => $row["downvotes"]
-                    );
-                }
+            echo '<form method="post" action="">';
+            echo '<label for="reply">Reply:</label><br>';
+            echo '<textarea id="reply" name="reply" rows="2" cols="50" required></textarea><br>';
+            echo '<input type="hidden" name="answer_id" value="' . $answer['id'] . '">';
+            echo '<button type="submit">Submit</button>';
+            echo '</form>';
+
+            $replyStmt = $db->prepare('SELECT * FROM replies WHERE answer_id = ?');
+            $replyStmt->execute([$answer['id']]);
+            $replies = $replyStmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($replies as $reply) {
+                echo '<div class="reply">';
+                echo '<p>' . htmlspecialchars($reply['reply']) . '</p>';
+                echo '</div>';
             }
-            foreach ($questions as $question_id => $question) {
-                echo "<form method='post'>" . "<div class='box'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>";
-                echo $question["vraag_text"] . "<br>" . "<textarea name='answer' class='txt_area' required></textarea>" .  "<input type='hidden' name='question_id' value='" . $question_id . "'>" . "<button type='submit' name='submit_answer'>Versturen</button>" . "</form>" . "</div>";
-                foreach ($question["antwoorden"] as $index => $answer) {
-                    echo "<div class='box answer_box' id='answer_box_" . $answer['vraag_id'] . "'>" . "<p class='name_card'>gepost door: (hier komt account naam)</p>" . $answer["antwoord_text"] . "<br>";
-                    echo "<form method='post'>";
-                    echo "<input type='hidden' name='vraag_id' value='" . $answer['vraag_id'] . "'>";
-                    echo "<button type='submit' name='upvote' value='" . $answer['vraag_id'] . "'>Upvote (" . $answer['upvotes'] . ")</button>";
-                    echo "<button type='submit' name='downvote' value='" . $answer['vraag_id'] . "'>Downvote (" . $answer['downvotes'] . ")</button>";
-                    echo "</form>";
-                    echo "</div>";
-                }
-            }
-        } else {
-            echo "<p>Er zijn nog geen vragen gesteld.</p>";
+
+            echo '<p class="score">' . $answer['score'] . '</p>';
+            echo '</div>';
         }
         ?>
     </div>
