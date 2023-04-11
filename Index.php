@@ -9,14 +9,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sort'])) {
 }
 
 if ($sortOption === 'newest') {
-    $stmt = $db->query('SELECT * FROM answers ORDER BY id DESC');
+    $stmt = $db->prepare('SELECT * FROM answers ORDER BY id DESC');
 } elseif ($sortOption === 'oldest') {
-    $stmt = $db->query('SELECT * FROM answers ORDER BY id ASC');
+    $stmt = $db->prepare('SELECT * FROM answers ORDER BY id ASC');
 } elseif ($sortOption === 'most_likes') {
-    $stmt = $db->query('SELECT * FROM answers ORDER BY score DESC');
+    $stmt = $db->prepare('SELECT * FROM answers ORDER BY score DESC');
 } elseif ($sortOption === 'least_likes') {
-    $stmt = $db->query('SELECT * FROM answers ORDER BY score ASC');
+    $stmt = $db->prepare('SELECT * FROM answers ORDER BY score ASC');
 }
+
+$stmt->execute();
 
 $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -25,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST
     $action = $_POST['action'];
     $user_id = $_SESSION['user_id'];
 
-    $stmt = $db->prepare('SELECT COUNT(*) FROM votes WHERE answer_id = ? AND user_id = ?');
-    $stmt->execute([$id, $user_id]);
+    $stmt = $db->prepare('SELECT COUNT(*) FROM votes WHERE answer_id = ? AND user_id = ? AND action = ?');
+    $stmt->execute([$id, $user_id, $action]);
     $result = $stmt->fetch(PDO::FETCH_NUM);
 
     if ($result[0] == 0) {
@@ -35,12 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST
         } elseif ($action === 'downvote') {
             $stmt = $db->prepare('UPDATE answers SET score = score - 1 WHERE id = ?');
         }
-    }
-    $stmt->execute([$id]);
-
+        $stmt->execute([$id]);
         $stmt = $db->prepare('INSERT INTO votes (answer_id, user_id, action) VALUES (?, ?, ?)');
         $stmt->execute([$id, $user_id, $action]);
-
+    }
 
     header('Location: index.php');
     exit;
@@ -58,7 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply']) && isset($_P
 
         $stmt = $db->prepare('INSERT INTO replies (reply, answer_id) VALUES (?, ?)');
         $stmt->execute([$reply, $answer_id]);
-    } else {
     }
 
     header('Location: index.php');
