@@ -8,7 +8,7 @@
     margin-bottom: 1vw;
     background-color: #252525;
     word-wrap: break-word;
-    float: left;
+    float:left;
 }
 
 .body {
@@ -24,5 +24,4 @@
     margin-bottom: 1vw;
     background-color: #383838;
     word-wrap: break-word;
-
 }
