@@ -9,43 +9,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sort'])) {
 }
 
 if ($sortOption === 'newest') {
-    $stmt = $db->query('SELECT * FROM answers ORDER BY id DESC');
+    $stmt = $db->prepare('SELECT * FROM answers ORDER BY id DESC');
 } elseif ($sortOption === 'oldest') {
-    $stmt = $db->query('SELECT * FROM answers ORDER BY id ASC');
+    $stmt = $db->prepare('SELECT * FROM answers ORDER BY id ASC');
 } elseif ($sortOption === 'most_likes') {
-    $stmt = $db->query('SELECT * FROM answers ORDER BY score DESC');
+    $stmt = $db->prepare('SELECT * FROM answers ORDER BY score DESC');
 } elseif ($sortOption === 'least_likes') {
-    $stmt = $db->query('SELECT * FROM answers ORDER BY score ASC');
+    $stmt = $db->prepare('SELECT * FROM answers ORDER BY score ASC');
 }
 
+$stmt->execute();
 $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['action'])) {
     $id = $_POST['id'];
     $action = $_POST['action'];
-    $user_id = $_SESSION['user_id'];
 
-    $stmt = $db->prepare('SELECT COUNT(*) FROM votes WHERE answer_id = ? AND user_id = ?');
-    $stmt->execute([$id, $user_id]);
-    $result = $stmt->fetch(PDO::FETCH_NUM);
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
 
-    if ($result[0] == 0) {
-        if ($action === 'upvote') {
-            $stmt = $db->prepare('UPDATE answers SET score = score + 1 WHERE id = ?');
-        } elseif ($action === 'downvote') {
-            $stmt = $db->prepare('UPDATE answers SET score = score - 1 WHERE id = ?');
+        $stmt = $db->prepare('SELECT COUNT(*) FROM votes WHERE answer_id = ? AND user_id = ?');
+        $stmt->execute([$id, $user_id]);
+        $result = $stmt->fetch(PDO::FETCH_NUM);
+
+        if ($result[0] == 0) {
+            $vote = ['upvote', 'downvote'];
+            if (in_array($action, $vote)) {
+                if ($action === 'upvote') {
+                    $sql = 'UPDATE answers SET score = score + 1 WHERE id = ?;
+                    INSERT INTO votes (answer_id, user_id, action) VALUES (?, ?, ?)';
+                    $stmt = $db->prepare($sql);
+                    $stmt->execute([$id, $id, $user_id, $action]);
+                } elseif ($action === 'downvote') {
+                    $sql = 'UPDATE answers SET score = score - 1 WHERE id = ?;
+                    INSERT INTO votes (answer_id, user_id, action) VALUES (?, ?, ?)';
+                    $stmt = $db->prepare($sql);
+                    $stmt->execute([$id, $id, $user_id, $action]);
+                }
+            }
         }
     }
-    $stmt->execute([$id]);
-
-        $stmt = $db->prepare('INSERT INTO votes (answer_id, user_id, action) VALUES (?, ?, ?)');
-        $stmt->execute([$id, $user_id, $action]);
-
-
     header('Location: index.php');
     exit;
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply']) && isset($_POST['answer_id'])) {
     $reply = $_POST['reply'];
@@ -67,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply']) && isset($_P
 
 
 
+
 $stmt = $db->query('SELECT * FROM answers');
 $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -83,18 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['answer'])) {
 
 <!DOCTYPE html>
 <html>
-<style>
-    .boxreply {
-        width: 50vw;
-        max-width: 50vw;
-        font-size: 1.25vw;
-        border: 0.2vw #383838;
-        position: none;
-        margin-bottom: 1vw;
-        background-color: #383838;
-        word-wrap: break-word;
-    }
-</style>
 
 <head>
     <title>Answers</title>
