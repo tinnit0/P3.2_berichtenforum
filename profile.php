@@ -50,10 +50,7 @@ h3{
 <h1>Profiel</h1>
 <div class="profile">
 <h2>Gegevens</h2><?php   
-echo "<p>Profielnaam<br></p>";
-
-?>
-<p>Dit zijn je badges:</p><br><br><br><br>
+echo "<p>Profielnaam<br></p>";?>
 </div>
 <a href="Logout1.php">Uitloggen</a><br>
 <a href="Index.php">Berichten</a>
