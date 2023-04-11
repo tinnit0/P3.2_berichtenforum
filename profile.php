@@ -3,7 +3,7 @@ session_start();
 include("connection.php");
 if ($_SESSION["loggin"] != true) {
     Header("Location: login.php");}
-$users = $con->query("SELECT * FROM users WHERE id = '" . $_SESSION['user_id'] . "'");
+$users = $con->query("SELECT * FROM users");
 
 $userdata = $users->fetch_assoc();
 
